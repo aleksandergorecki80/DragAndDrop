@@ -1,12 +1,10 @@
 // Autobind decorator
 function Autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
-  console.log(descriptor);
-  const originalMethod = descriptor.value;
+  const orygianlMethod = descriptor.value;
   const adjDescriptor: PropertyDescriptor = {
     configurable: true,
-    enumerable: false,
     get() {
-      const boundFn = originalMethod.bind(this);
+      const boundFn = orygianlMethod.bind(this);
       return boundFn;
     },
   };
@@ -49,10 +47,40 @@ class ProjectInput {
     this.attach();
   }
 
+  private gatherUserInput(): [string, string, number] | void {
+    const enteredTitle = this.titleInputElement.value;
+    const enteredDescription = this.descriptionInputElement.value;
+    const enteredPeople = this.peopleInputElement.value;
+
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredDescription.trim().length === 0 ||
+      enteredPeople.trim().length === 0 ||
+      +enteredPeople === 0
+    ) {
+      console.log('Pleas try again');
+      return;
+    }
+    return [enteredTitle, enteredDescription, +enteredPeople];
+  }
+
+  private clearInputs() {
+    this.titleInputElement.value = '';
+    this.descriptionInputElement.value = '';
+    this.peopleInputElement.value = '';
+  }
+
   @Autobind
   private submitHandler(event: Event) {
     event.preventDefault();
-    console.log(this.titleInputElement.value);
+    const userInput = this.gatherUserInput();
+    if (Array.isArray(userInput)) {
+      const [title, description, people] = userInput;
+      console.log(
+        `Title: ${title}, description: ${description}, people: ${people}.`
+      );
+      this.clearInputs();
+    }
   }
 
   private configure() {
