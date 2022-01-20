@@ -7,3 +7,5 @@ new ProjectList('finished');
 // console.log(el);
 // console.log(activePrjList);
 // console.log(finishedPrjList);
+
+console.log('kki');
